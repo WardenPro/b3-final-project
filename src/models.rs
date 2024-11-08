@@ -1,19 +1,25 @@
-use diesel::prelude::*;
-use crate::schema::posts;
+use diesel::{Queryable, Insertable};
+use serde::{Serialize, Deserialize};
+use crate::schema::users;
 
-#[derive(Queryable, Selectable)]
-#[diesel(table_name = crate::schema::posts)]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
-pub struct Post {
+#[derive(Queryable, Serialize, Deserialize)]
+pub struct User {
     pub id: i32,
-    pub title: String,
-    pub body: String,
-    pub published: bool,
+    pub password: String,
+    pub nom: String,
+    pub prenom: String,
+    pub email: String,
+    pub role: String,
+    pub created_at: chrono::NaiveDateTime,
 }
 
-#[derive(Insertable)]
-#[diesel(table_name = posts)]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
+
+#[derive(Insertable, Serialize, Deserialize)]
+#[diesel(table_name = crate::schema::users)]
+pub struct NewUser<'a> {
+    pub password: &'a str,
+    pub nom: &'a str,
+    pub prenom: &'a str,
+    pub email: &'a str,
+    pub role: &'a str,
 }
